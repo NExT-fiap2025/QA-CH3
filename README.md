@@ -99,40 +99,9 @@ Este documento descreve os casos de teste manuais para as funcionalidades princi
           "erro": "Usuario UsuarioManual_A ja existe."
         }
         ```
-
 ---
 
-### TC04 - Tentar Cadastrar Imagem Sem Rosto Detectável
-
-* **Objetivo:** Verificar se a API rejeita o cadastro se a imagem enviada não contiver um rosto detectável.
-* **Pré-condição:** API rodando.
-* **Dados de Entrada (Controlados):**
-    * **Requisição:** `POST /api/cadastrar`
-    * **Corpo (JSON):**
-        ```json
-        {
-          "nome_usuario": "UsuarioSemRosto",
-          "imagem_base64": "[IMAGEM_SEM_ROSTO_BASE64]"
-        }
-        ```
-        *(Nota: Usar Base64 de uma imagem sem rosto.)*
-* **Procedimento (Passos):**
-    1.  **Ação:** Enviar a requisição POST via ferramenta de API.
-        **Resultado Esperado:** Requisição enviada com sucesso.
-    2.  **Ação:** Observar a resposta da API.
-        **Resultado Esperado:** A resposta corresponde aos Dados de Saída (Status 400, corpo JSON de erro).
-* **Dados de Saída (Esperados):**
-    * **Status Code:** `400 Bad Request`
-    * **Corpo (JSON):**
-        ```json
-        {
-          "erro": "Nao foi possivel detectar um (e apenas um) rosto na imagem."
-        }
-        ```
-
----
-
-### TC05 - Validar Usuário Não Cadastrado
+### TC04 - Validar Usuário Não Cadastrado
 
 * **Objetivo:** Verificar se a API retorna "não encontrado" ao tentar validar um rosto não cadastrado.
 * **Pré-condição:** API rodando. O usuário correspondente à imagem de teste NÃO está cadastrado.
@@ -168,6 +137,9 @@ Este documento descreve os casos de teste manuais para as funcionalidades princi
 
 Este projeto inclui um plano de testes manuais e uma suíte de testes automatizados para a API.
 
+- [Link Postman](https://app.getpostman.com/join-team?invite_code=7c6cd230f29383186cb656b0fd23818099748924af3c29c2645eb7cd8bba78af&target_code=329519929f3645977769c149b324b0fd)
+- [Link para repo da API](https://github.com/NExT-fiap2025/api-reconhecimento-facial.git)
+
 * **Plano de Testes Manuais:** Detalhes sobre os casos de teste manuais, dados de entrada/saída e procedimentos podem ser encontrados no texto acima.
-* **Testes Automatizados (Postman):** Uma coleção do Postman com testes automatizados para os endpoints principais está disponível em `postman/API_Reconhecimento_Facial.postman_collection.json`.
+* **Testes Automatizados (Postman):** Uma coleção do Postman com testes automatizados para os endpoints principais está disponível em `postman/API_Reconhecimento_Facial.postman_collection.json`. 
     * **Como Executar:** Importe este arquivo no Postman e use o "Collection Runner" para executar os testes contra a API (certifique-se de que o backend `app.py` esteja rodando localmente em `http://127.0.0.1:5000`).
