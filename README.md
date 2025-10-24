@@ -168,6 +168,6 @@ Este documento descreve os casos de teste manuais para as funcionalidades princi
 
 Este projeto inclui um plano de testes manuais e uma suíte de testes automatizados para a API.
 
-* **Plano de Testes Manuais:** Detalhes sobre os casos de teste manuais, dados de entrada/saída e procedimentos podem ser encontrados em [MANUAL_TEST_PLAN.md](./MANUAL_TEST_PLAN.md).
+* **Plano de Testes Manuais:** Detalhes sobre os casos de teste manuais, dados de entrada/saída e procedimentos podem ser encontrados no texto acima.
 * **Testes Automatizados (Postman):** Uma coleção do Postman com testes automatizados para os endpoints principais está disponível em `postman/API_Reconhecimento_Facial.postman_collection.json`.
     * **Como Executar:** Importe este arquivo no Postman e use o "Collection Runner" para executar os testes contra a API (certifique-se de que o backend `app.py` esteja rodando localmente em `http://127.0.0.1:5000`).
