@@ -8,130 +8,110 @@ Este documento descreve os casos de teste manuais para as funcionalidades princi
 
 ---
 
-## Casos de Teste
+# Relatório de Testes Automatizados - API Reconhecimento Facial
 
-### TC01 - Cadastrar Novo Usuário com Rosto Válido
+Este documento resume os resultados da execução da suíte de testes automatizados para a API de reconhecimento facial, utilizando a coleção Postman.
 
-* **Objetivo:** Verificar se um novo usuário pode ser cadastrado com sucesso quando uma imagem válida contendo um único rosto é enviada.
-* **Pré-condição:** API de backend (`app.py`) está rodando.
-* **Dados de Entrada (Controlados):**
-    * **Requisição:** `POST /api/cadastrar`
-    * **Corpo (JSON):**
-        ```json
-        {
-          "nome_usuario": "UsuarioManual_A",
-          "imagem_base64": "[IMAGEM_VALIDA_USUARIO_A_BASE64]"
-        }
-        ```
-        *(Nota: `[IMAGEM_VALIDA_USUARIO_A_BASE64]` representa a string Base64 real de uma imagem de teste válida.)*
-* **Procedimento (Passos):**
-    1.  **Ação:** Usar uma ferramenta de API (Postman, Insomnia, curl) para enviar a requisição POST com os dados de entrada definidos.
-        **Resultado Esperado:** Requisição enviada com sucesso.
-    2.  **Ação:** Observar a resposta da API.
-        **Resultado Esperado:** A resposta corresponde aos Dados de Saída (Status 201, corpo JSON de sucesso).
-* **Dados de Saída (Esperados):**
-    * **Status Code:** `201 Created`
-    * **Corpo (JSON):**
-        ```json
-        {
-          "status": "sucesso",
-          "mensagem": "Usuario UsuarioManual_A cadastrado com sucesso."
-        }
-        ```
+**Coleção Postman:** [`postman/API_Reconhecimento_Facial.postman_collection.json`](./postman/API_Reconhecimento_Facial.postman_collection.json)
+
+**Ambiente:** Local (`http://127.0.0.1:5000`)
 
 ---
 
-### TC02 - Validar Usuário Cadastrado com Rosto Válido
+## Resumo da Execução
 
-* **Objetivo:** Verificar se um usuário previamente cadastrado é corretamente identificado ao enviar uma nova imagem válida.
-* **Pré-condição:** API rodando. Usuário "UsuarioManual_A" cadastrado (via TC01).
-* **Dados de Entrada (Controlados):**
-    * **Requisição:** `POST /api/validar`
-    * **Corpo (JSON):**
-        ```json
-        {
-          "imagem_base64": "[IMAGEM_VALIDA_USUARIO_A_NOVA_BASE64]"
-        }
-        ```
-        *(Nota: Usar uma Base64 de *outra* foto válida do mesmo usuário A.)*
-* **Procedimento (Passos):**
-    1.  **Ação:** Enviar a requisição POST via ferramenta de API.
-        **Resultado Esperado:** Requisição enviada com sucesso.
-    2.  **Ação:** Observar a resposta da API.
-        **Resultado Esperado:** A resposta corresponde aos Dados de Saída (Status 200, identificado=true, usuario="UsuarioManual_A", distancia < 0.6).
-* **Dados de Saída (Esperados):**
-    * **Status Code:** `200 OK`
-    * **Corpo (JSON):**
-        ```json
-        {
-          "status": "sucesso",
-          "identificado": true,
-          "usuario": "UsuarioManual_A",
-          "distancia": "[VALOR_FLOAT < 0.6]"
-        }
-        ```
+A suíte de testes foi executada utilizando o Postman Collection Runner.
+
+* **Total de Requisições:** 4
+* **Total de Testes (Asserções):** 8
+* **Testes Passaram:** 8
+* **Testes Falharam:** 0
+* **Testes Ignorados:** 0
+
+**Resultado Geral:** ✅ SUCESSO (Todos os testes passaram)
 
 ---
 
-### TC03 - Tentar Cadastrar Usuário Duplicado
+## Detalhes por Requisição
 
+### AT01 - POST Cadastrar Usuario Valido
+
+* **Endpoint:** `POST /api/cadastrar`
+* **Objetivo:** Verificar o cadastro bem-sucedido de um novo usuário com imagem válida.
+* **Corpo da Requisição (JSON):**
+    ```json
+    {
+      "nome_usuario": "PostmanUser_A",
+      "imagem_base64": "[BASE64_REAL_IMAGEM_VALIDA_A]" 
+    }
+    ```
+* **Resultados dos Testes:**
+    * ✅ **PASS:** Status code is 201 Created
+    * ✅ **PASS:** Response body includes success status and message
+* **Status HTTP Retornado:** `201 Created`
+
+---
+
+### AT02 - POST Tentar Cadastrar Usuário Duplicado
+
+* **Endpoint:** `POST /api/cadastrar`
 * **Objetivo:** Verificar se a API impede o cadastro de um usuário com nome já existente.
-* **Pré-condição:** API rodando. Usuário "UsuarioManual_A" cadastrado.
-* **Dados de Entrada (Controlados):**
-    * **Requisição:** `POST /api/cadastrar`
-    * **Corpo (JSON):** (Mesmo payload do TC01)
-        ```json
-        {
-          "nome_usuario": "UsuarioManual_A",
-          "imagem_base64": "[IMAGEM_VALIDA_USUARIO_A_BASE64]"
-        }
-        ```
-* **Procedimento (Passos):**
-    1.  **Ação:** Enviar a requisição POST via ferramenta de API.
-        **Resultado Esperado:** Requisição enviada com sucesso.
-    2.  **Ação:** Observar a resposta da API.
-        **Resultado Esperado:** A resposta corresponde aos Dados de Saída (Status 409, corpo JSON de erro).
-* **Dados de Saída (Esperados):**
-    * **Status Code:** `409 Conflict`
-    * **Corpo (JSON):**
-        ```json
-        {
-          "erro": "Usuario UsuarioManual_A ja existe."
-        }
-        ```
----
-
-### TC04 - Validar Usuário Não Cadastrado
-
-* **Objetivo:** Verificar se a API retorna "não encontrado" ao tentar validar um rosto não cadastrado.
-* **Pré-condição:** API rodando. O usuário correspondente à imagem de teste NÃO está cadastrado.
-* **Dados de Entrada (Controlados):**
-    * **Requisição:** `POST /api/validar`
-    * **Corpo (JSON):**
-        ```json
-        {
-          "imagem_base64": "[IMAGEM_VALIDA_USUARIO_B_BASE64]"
-        }
-        ```
-        *(Nota: Usar Base64 de um usuário ("B") não cadastrado.)*
-* **Procedimento (Passos):**
-    1.  **Ação:** Enviar a requisição POST via ferramenta de API.
-        **Resultado Esperado:** Requisição enviada com sucesso.
-    2.  **Ação:** Observar a resposta da API.
-        **Resultado Esperado:** A resposta corresponde aos Dados de Saída (Status 404, identificado=false, usuario=null, distancia >= 0.6).
-* **Dados de Saída (Esperados):**
-    * **Status Code:** `404 Not Found`
-    * **Corpo (JSON):**
-        ```json
-        {
-          "status": "nao_encontrado",
-          "identificado": false,
-          "usuario": null,
-          "distancia": "[VALOR_FLOAT >= 0.6]"
-        }
-        ```
+* **Pré-condição:** Usuário `PostmanUser_A` já cadastrado pela requisição AT01.
+* **Corpo da Requisição (JSON):** (Mesmo payload da AT01)
+    ```json
+    {
+      "nome_usuario": "PostmanUser_A",
+      "imagem_base64": "[BASE64_REAL_IMAGEM_VALIDA_A]" 
+    }
+    ```
+* **Resultados dos Testes:**
+    * ✅ **PASS:** Status code is 409 Conflict
+    * ✅ **PASS:** Response body includes error message for duplicate user
+* **Status HTTP Retornado:** `409 Conflict`
 
 ---
+
+### AT03 - POST Validar Usuario Cadastrado
+
+* **Endpoint:** `POST /api/validar`
+* **Objetivo:** Verificar a identificação correta de um usuário previamente cadastrado.
+* **Pré-condição:** Usuário `PostmanUser_A` já cadastrado pela requisição AT01.
+* **Corpo da Requisição (JSON):**
+    ```json
+    {
+      "imagem_base64": "[BASE64_REAL_IMAGEM_VALIDA_A_NOVA]" 
+    }
+    ``` 
+    *(Nota: Utiliza uma segunda imagem válida do mesmo usuário)*
+* **Resultados dos Testes:**
+    * ✅ **PASS:** Status code is 200 OK
+    * ✅ **PASS:** Response body shows identified user A (inclui `identificado: true`, `usuario: "PostmanUser_A"`, `distancia < 0.6`)
+* **Status HTTP Retornado:** `200 OK`
+
+---
+
+### AT04 - POST Validar Usuario Nao Cadastrado
+
+* **Endpoint:** `POST /api/validar`
+* **Objetivo:** Verificar se a API retorna "não encontrado" para um rosto não cadastrado.
+* **Pré-condição:** O usuário correspondente à imagem de teste (`PostmanUser_B`) não está cadastrado.
+* **Corpo da Requisição (JSON):**
+    ```json
+    {
+      "imagem_base64": "[BASE64_REAL_IMAGEM_VALIDA_B]" 
+    }
+    ```
+    *(Nota: Utiliza imagem de um usuário diferente e não cadastrado)*
+* **Resultados dos Testes:**
+    * ✅ **PASS:** Status code is 404 Not Found
+    * ✅ **PASS:** Response body shows user not found (inclui `identificado: false`, `usuario: null`, `distancia >= 0.6`)
+* **Status HTTP Retornado:** `404 Not Found`
+
+---
+
+**Observações:**
+* Os placeholders `[BASE64_REAL_...]` nos corpos das requisições referem-se às strings Base64 reais utilizadas durante a execução dos testes no Postman.
+* O threshold de distância para reconhecimento (`THRESH`) configurado na API é `0.6`.
 
 ## Testes
 
